@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,6 +19,11 @@ public class Limelight extends SubsystemBase {
     public static final int LED_FORCE_BLINK = 2;
     public static final int LED_FORCE_ON = 3;
 
+    public static final double LIMELIGHT_HEIGHT = 0; // Height of lens from floor (in inches) TODO: Test this value
+    public static final double LIMELIGHT_ANGLE = 90; // Downwards pitch (in degrees) TODO: Test this value
+
+    private HashMap<Integer, Double> heightMap = new HashMap<>();
+
     NetworkTableInstance limelighTableInstance;
     NetworkTable limelightTable;
     int streamModeToggleValue = STREAM_MODE_STANDARD;
@@ -25,12 +31,14 @@ public class Limelight extends SubsystemBase {
     final DoubleSubscriber taSubscriber;
     final DoubleSubscriber txSubscriber;
     final DoubleSubscriber tySubscriber;
+    final IntegerSubscriber tidSubscriber;
 
     public Limelight() {
         limelightTable = NetworkTableInstance.getDefault().getTable(LIMELIGHT_HOST_NAME);
         taSubscriber = limelightTable.getDoubleTopic("ta").subscribe(1.0);
         txSubscriber = limelightTable.getDoubleTopic("tx").subscribe(1.0);
         tySubscriber = limelightTable.getDoubleTopic("ty").subscribe(1.0);
+        tidSubscriber = limelightTable.getIntegerTopic("tid").subscribe(1);
     }
 
     public void toggleStreamMode() {
@@ -76,6 +84,10 @@ public class Limelight extends SubsystemBase {
         return tySubscriber.get();
     }
 
+    public int getTid() {
+        return tidSubscriber.get();
+    }
+
     public double horizontalOffsetFromCrosshairAsDegrees() {
         // SmartDashboard.putNumber("tx", txSubscriber.get());
         return txSubscriber.get();
@@ -87,6 +99,16 @@ public class Limelight extends SubsystemBase {
     
     public static double getDistanceFromAprilTagInches(double ta) {
         return (68.86483 * Math.pow(ta, -0.633957)); // return (185.267402 * Math.pow(ta, -0.4997426126));
+    }
+
+    public double getDistanceFromAprilTagWithID() {
+        int id = getTid();
+        double angle = getTy();
+        if(heightMap.containsKey(id)) {
+            return (heightMap.get(id) - LIMELIGHT_HEIGHT)/(Math.tan(LIMELIGHT_ANGLE + angle)); // TODO: Test this formula
+        } else {
+            return getDistanceFromAprilTagInches();
+        }
     }
 
     public double getDistanceFromAprilTagFeet() {
