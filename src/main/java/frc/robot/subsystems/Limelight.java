@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.*;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
@@ -24,6 +25,17 @@ public class Limelight extends SubsystemBase {
 
     private HashMap<Integer, Double> heightMap = new HashMap<>();
 
+    private static final double TRENCH_HEIGHT = 35.0d;
+    private static final double HUB_HEIGHT = 44.25d;
+    private static final double OUTPOST_HEIGHT = 21.75d;
+    private static final double TOWER_HEIGHT = 21.75d;
+
+    private static final int[] TRENCH_TAGS = new int[] {1, 12, 6, 7, 17, 28, 22, 23};
+    private static final int[] HUB_TAGS = new int[] {3, 4, 5, 8, 9, 10, 11, 2, 18, 19, 20, 21, 24, 25, 26, 27};
+    private static final int[] OUTPOST_TAGS = new int[] {13, 14, 29, 30};
+    private static final int[] TOWER_TAGS = new int[] {15, 16, 31, 32};
+
+
     NetworkTableInstance limelighTableInstance;
     NetworkTable limelightTable;
     int streamModeToggleValue = STREAM_MODE_STANDARD;
@@ -39,6 +51,24 @@ public class Limelight extends SubsystemBase {
         txSubscriber = limelightTable.getDoubleTopic("tx").subscribe(1.0);
         tySubscriber = limelightTable.getDoubleTopic("ty").subscribe(1.0);
         tidSubscriber = limelightTable.getIntegerTopic("tid").subscribe(1);
+
+        configureAprilTagBindings();
+    }
+
+    private void configureAprilTagBindings() {
+        massInsert(TRENCH_HEIGHT, TRENCH_TAGS);
+        
+        massInsert(HUB_HEIGHT, HUB_TAGS);
+
+        massInsert(OUTPOST_HEIGHT, OUTPOST_TAGS);
+        
+        massInsert(TOWER_HEIGHT, TOWER_TAGS);
+    }
+
+    private void massInsert(double value, int[] keys) {
+        for(int i : keys) {
+            heightMap.put(i, value);
+        }
     }
 
     public void toggleStreamMode() {
@@ -85,7 +115,7 @@ public class Limelight extends SubsystemBase {
     }
 
     public int getTid() {
-        return tidSubscriber.get();
+        return (int)(tidSubscriber.get());
     }
 
     public double horizontalOffsetFromCrosshairAsDegrees() {
@@ -105,7 +135,7 @@ public class Limelight extends SubsystemBase {
         int id = getTid();
         double angle = getTy();
         if(heightMap.containsKey(id)) {
-            return (heightMap.get(id) - LIMELIGHT_HEIGHT)/(Math.tan(LIMELIGHT_ANGLE + angle)); // TODO: Test this formula
+            return (heightMap.get(id) - LIMELIGHT_HEIGHT)/(Math.tan(Math.toRadians(LIMELIGHT_ANGLE + angle)); // TODO: Test this formula
         } else {
             return getDistanceFromAprilTagInches();
         }
