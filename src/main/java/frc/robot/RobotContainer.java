@@ -58,6 +58,8 @@ public class RobotContainer {
 
   // Define triggers and their respective commands
   private void configureBindings() {
+    limelight.setStreamMode(Limelight.STREAM_MODE_STANDARD);
+
     controller.b().onTrue(new InstantCommand(() -> drivingRobotCentric.set(!drivingRobotCentric.get())));
     controller.leftBumper().onTrue(new InstantCommand(() -> {drivetrain.seedFieldCentric();}));
     controller.x().whileTrue(drivetrain.applyRequest(() -> brake));

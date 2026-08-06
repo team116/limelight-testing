@@ -102,6 +102,9 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Last Perceived Distance from April Tag (in.)", lastDist);
     SmartDashboard.putNumber("Last Perceived Horizontal Offset from April Tag (deg.)", lastDegree);
+
+    SmartDashboard.putBoolean("Perceived AprilTag", m_robotContainer.limelight.hasValidTarget());
+    SmartDashboard.putNumber("ta", m_robotContainer.limelight.getTa());
   }
 
   @Override

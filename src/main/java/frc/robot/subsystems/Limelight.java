@@ -86,7 +86,7 @@ public class Limelight extends SubsystemBase {
     }
     
     public static double getDistanceFromAprilTagInches(double ta) {
-        return (185.267402 * Math.pow(ta, -0.4997426126));
+        return (68.86483 * Math.pow(ta, -0.633957)); // return (185.267402 * Math.pow(ta, -0.4997426126));
     }
 
     public double getDistanceFromAprilTagFeet() {
