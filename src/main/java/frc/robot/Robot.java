@@ -99,6 +99,7 @@ public class Robot extends TimedRobot {
     
     SmartDashboard.putNumber("Distance from April Tag (in.)", currDist);
     SmartDashboard.putNumber("Horizontal Offset from April Tag (deg.)", currDeg);
+    SmartDashboard.putNumber("Vertical Offset from April Tag (deg.)", m_robotContainer.limelight.getTy());
     SmartDashboard.putNumber("Distance from April Tag w/ height calculations (in.)", m_robotContainer.limelight.getDistanceFromAprilTagWithID());
 
     SmartDashboard.putNumber("Last Perceived Distance from April Tag (in.)", lastDist);

@@ -20,8 +20,8 @@ public class Limelight extends SubsystemBase {
     public static final int LED_FORCE_BLINK = 2;
     public static final int LED_FORCE_ON = 3;
 
-    public static final double LIMELIGHT_HEIGHT = 0; // Height of lens from floor (in inches) TODO: Test this value
-    public static final double LIMELIGHT_ANGLE = 90; // Downwards pitch (in degrees) TODO: Test this value
+    public static final double LIMELIGHT_HEIGHT = 31 + 5.0d/16; // Height of lens from floor (in inches) TODO: Test this value
+    public static final double LIMELIGHT_ANGLE = 0; // Downwards pitch (in degrees) TODO: Test this value
 
     private HashMap<Integer, Double> heightMap = new HashMap<>();
 
@@ -135,7 +135,7 @@ public class Limelight extends SubsystemBase {
         int id = getTid();
         double angle = getTy();
         if(heightMap.containsKey(id)) {
-            return (heightMap.get(id) - LIMELIGHT_HEIGHT)/(Math.tan(Math.toRadians(LIMELIGHT_ANGLE + angle)); // TODO: Test this formula
+            return (heightMap.get(id) - LIMELIGHT_HEIGHT)/(Math.tan(Math.toRadians(LIMELIGHT_ANGLE + angle))); // TODO: Test this formula
         } else {
             return getDistanceFromAprilTagInches();
         }
