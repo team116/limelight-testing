@@ -100,6 +100,10 @@ public class RobotContainer {
     );
 
     limelight.setDefaultCommand(new DefaultLimelightCommand(limelight));
+
+    Command toggleLEDs = new InstantCommand(() -> limelight.toggleLEDs());
+
+    controller.y().onTrue(toggleLEDs);
   }
 
   public Command getAutonomousCommand() {

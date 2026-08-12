@@ -92,6 +92,20 @@ public class Limelight extends SubsystemBase {
         setLedMode(LED_FORCE_OFF);
     }
 
+    public void toggleLEDs() {
+        switch ((int)(limelightTable.getEntry("ledMode").getInteger(LED_FORCE_ON))) {
+            case LED_FORCE_ON:
+                ledOff();
+                break;
+            case LED_FORCE_OFF:
+                ledOn();
+                break;
+            default:
+                break;
+        }
+
+    }
+
     public boolean hasValidTarget() {
         // SmartDashboard.putNumber("ta", taSubscriber.get());
         return taSubscriber.get() > 0.05d;
